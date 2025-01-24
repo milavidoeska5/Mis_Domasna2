@@ -2,8 +2,25 @@ import 'package:flutter/material.dart';
 import '../data/movies_data.dart';
 import '../widgets/movie_card.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  List<Map<String, dynamic>> watchedMovies = [];
+
+  void toggleWatchedStatus(Map<String, dynamic> movie) {
+    setState(() {
+      if (watchedMovies.contains(movie)) {
+        watchedMovies.remove(movie);
+      } else {
+        watchedMovies.add(movie);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +38,11 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.visibility),
             onPressed: () {
-              Navigator.pushNamed(context, '/watched');
+              Navigator.pushNamed(
+                context,
+                '/watched',
+                arguments: watchedMovies,
+              );
             },
           ),
         ],
@@ -44,6 +65,9 @@ class HomeScreen extends StatelessWidget {
                 '/details',
                 arguments: movies[index],
               );
+            },
+            onWatchToggle: () {
+              toggleWatchedStatus(movies[index]);
             },
           );
         },
